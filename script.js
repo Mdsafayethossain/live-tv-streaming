@@ -39,50 +39,7 @@ class LiveTVStreamer {
         }
     }
 
-    loadDefaultChannels() {
-        this.channels = [
-            {
-                id: 1,
-                name: "Lofi Girl",
-                url: "https://www.youtube.com/embed/jfKfPfyJRdk",
-                type: "youtube",
-                category: "music",
-                description: "24/7 lofi hip hop radio - beats to relax/study to",
-                status: "active",
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 2,
-                name: "NASA Live",
-                url: "https://www.youtube.com/embed/21X5lGlDOfg",
-                type: "youtube",
-                category: "education",
-                description: "NASA's official live stream from the International Space Station",
-                status: "active",
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 3,
-                name: "BBC World News",
-                url: "https://www.youtube.com/embed/HN_2I4W2g14",
-                type: "youtube",
-                category: "news",
-                description: "24/7 international news coverage",
-                status: "active",
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: 4,
-                name: "Relaxing Nature",
-                url: "https://www.youtube.com/embed/4KZ_1d5Sghc",
-                type: "youtube",
-                category: "entertainment",
-                description: "Beautiful nature scenes with relaxing music",
-                status: "active",
-                createdAt: new Date().toISOString()
-            }
-        ];
-        
+   
         // Save to localStorage
         localStorage.setItem(this.storageKey, JSON.stringify(this.channels));
     }
@@ -403,4 +360,5 @@ window.tvStreamer = tvStreamer;
 // Load channel from URL when page loads
 window.addEventListener('DOMContentLoaded', () => {
     tvStreamer.loadChannelFromUrl();
+
 });
