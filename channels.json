@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Lofi Girl Radio",
+    "url": "https://www.youtube.com/embed/jfKfPfyJRdk",
+    "type": "youtube",
+    "category": "music",
+    "description": "24/7 lofi hip hop radio - beats to relax/study to",
+    "status": "active",
+    "createdAt": "2024-01-01T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "NASA Live Stream",
+    "url": "https://www.youtube.com/embed/21X5lGlDOfg",
+    "type": "youtube",
+    "category": "education",
+    "description": "Live views of Earth from the International Space Station",
+    "status": "active",
+    "createdAt": "2024-01-02T14:30:00Z"
+  },
+  {
+    "id": 3,
+    "name": "BBC World News",
+    "url": "https://www.youtube.com/embed/86YLFOog4GM",
+    "type": "youtube",
+    "category": "news",
+    "description": "24/7 international news coverage",
+    "status": "active",
+    "createdAt": "2024-01-03T09:15:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Relaxing Nature",
+    "url": "https://www.youtube.com/embed/4KZ_1d5Sghc",
+    "type": "youtube",
+    "category": "entertainment",
+    "description": "Beautiful nature scenes with relaxing music",
+    "status": "active",
+    "createdAt": "2024-01-04T16:45:00Z"
+  }
+]

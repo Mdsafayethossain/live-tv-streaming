@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Live TV Streaming</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-broadcast-tower"></i>
+                    <h2>TV Admin</h2>
+                </div>
+                <div class="admin-info">
+                    <div class="admin-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-details">
+                        <h3>Administrator</h3>
+                        <p>Live TV Server</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-page="channels">
+                        <i class="fas fa-tv"></i>
+                        <span>Channels</span>
+                        <span class="badge" id="channelCount">0</span>
+                    </li>
+                    <li class="nav-item" data-page="add-channel">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add Channel</span>
+                    </li>
+                    <li class="nav-item" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                    <li class="nav-item" data-page="backup">
+                        <i class="fas fa-database"></i>
+                        <span>Backup</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="index.html" class="view-site">
+                    <i class="fas fa-external-link-alt"></i>
+                    View Site
+                </a>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="top-bar-right">
+                    <div class="notifications">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                    </div>
+                    <div class="user-menu">
+                        <span>Welcome, Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Page -->
+                <section id="dashboard" class="page active">
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon youtube">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>YouTube Channels</h3>
+                                <p id="youtubeStats">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon facebook">
+                                <i class="fab fa-facebook"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Facebook Channels</h3>
+                                <p id="facebookStats">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon categories">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Categories</h3>
+                                <p id="categoryStats">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <i class="fas fa-tv"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Channels</h3>
+                                <p id="totalStats">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recent-activity">
+                        <div class="section-header">
+                            <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                            <button class="btn-refresh" onclick="adminPanel.refreshData()">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="activity-list" id="activityList">
+                            <!-- Activities will be loaded here -->
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                        <div class="actions-grid">
+                            <button class="action-btn" onclick="adminPanel.showAddChannel()">
+                                <i class="fas fa-plus"></i>
+                                <span>Add New Channel</span>
+                            </button>
+                            <button class="action-btn" onclick="adminPanel.exportChannels()">
+                                <i class="fas fa-download"></i>
+                                <span>Export Channels</span>
+                            </button>
+                            <button class="action-btn" onclick="adminPanel.importChannels()">
+                                <i class="fas fa-upload"></i>
+                                <span>Import Channels</span>
+                            </button>
+                            <button class="action-btn" onclick="adminPanel.backupData()">
+                                <i class="fas fa-save"></i>
+                                <span>Backup Data</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Channels Management Page -->
+                <section id="channels" class="page">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tv"></i> Manage Channels</h2>
+                        <div class="header-actions">
+                            <button class="btn-primary" onclick="adminPanel.showAddChannel()">
+                                <i class="fas fa-plus"></i> Add Channel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="controls-row">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchChannels" placeholder="Search channels...">
+                        </div>
+                        <select id="filterCategory" class="filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="news">News</option>
+                            <option value="sports">Sports</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="music">Music</option>
+                            <option value="education">Education</option>
+                        </select>
+                        <select id="filterType" class="filter-select">
+                            <option value="all">All Types</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                        </select>
+                    </div>
+
+                    <div class="channels-table-container">
+                        <table class="channels-table">
+                            <thead>
+                                <tr>
+                                    <th>Channel Name</th>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="channelsTableBody">
+                                <!-- Channels will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Add/Edit Channel Page -->
+                <section id="add-channel" class="page">
+                    <div class="section-header">
+                        <h2><i class="fas fa-plus-circle"></i> Add New Channel</h2>
+                    </div>
+
+                    <form id="channelForm" class="channel-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="channelName">
+                                    <i class="fas fa-tv"></i> Channel Name *
+                                </label>
+                                <input type="text" id="channelName" required 
+                                       placeholder="Enter channel name (e.g., CNN News)">
+                            </div>
+                            <div class="form-group">
+                                <label for="channelCategory">
+                                    <i class="fas fa-tag"></i> Category *
+                                </label>
+                                <select id="channelCategory" required>
+                                    <option value="">Select category</option>
+                                    <option value="news">News</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="entertainment">Entertainment</option>
+                                    <option value="music">Music</option>
+                                    <option value="education">Education</option>
+                                    <option value="religious">Religious</option>
+                                    <option value="kids">Kids</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="channelUrl">
+                                    <i class="fas fa-link"></i> Stream URL *
+                                </label>
+                                <input type="url" id="channelUrl" required 
+                                       placeholder="Enter YouTube or Facebook stream URL">
+                                <small class="help-text">
+                                    Enter YouTube or Facebook live stream URL
+                                </small>
+                            </div>
+                            <div class="form-group">
+                                <label for="channelType">
+                                    <i class="fas fa-globe"></i> Stream Type *
+                                </label>
+                                <select id="channelType" required>
+                                    <option value="">Select type</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="channelDescription">
+                                <i class="fas fa-align-left"></i> Description
+                            </label>
+                            <textarea id="channelDescription" rows="4" 
+                                      placeholder="Enter channel description (optional)"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="channelStatus">
+                                <i class="fas fa-check-circle"></i> Status
+                            </label>
+                            <select id="channelStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="adminPanel.resetForm()">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Channel
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Settings Page -->
+                <section id="settings" class="page">
+                    <div class="section-header">
+                        <h2><i class="fas fa-cog"></i> Settings</h2>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="setting-card">
+                            <h3><i class="fas fa-user-shield"></i> Security</h3>
+                            <div class="setting-item">
+                                <label>Change Admin Password</label>
+                                <input type="password" id="adminPassword" placeholder="New password">
+                            </div>
+                            <div class="setting-item">
+                                <label>Two-Factor Authentication</label>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <h3><i class="fas fa-palette"></i> Appearance</h3>
+                            <div class="setting-item">
+                                <label>Theme Color</label>
+                                <input type="color" id="themeColor" value="#0072ff">
+                            </div>
+                            <div class="setting-item">
+                                <label>Auto-refresh Interval</label>
+                                <select id="refreshInterval">
+                                    <option value="0">Disabled</option>
+                                    <option value="30000">30 Seconds</option>
+                                    <option value="60000">1 Minute</option>
+                                    <option value="300000">5 Minutes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-card">
+                            <h3><i class="fas fa-database"></i> Storage</h3>
+                            <div class="setting-item">
+                                <label>Storage Method</label>
+                                <select id="storageMethod">
+                                    <option value="localStorage">Local Storage</option>
+                                    <option value="json">JSON File</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label>Clear All Data</label>
+                                <button class="btn-danger" onclick="adminPanel.clearAllData()">
+                                    <i class="fas fa-trash"></i> Clear Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Backup Page -->
+                <section id="backup" class="page">
+                    <div class="section-header">
+                        <h2><i class="fas fa-database"></i> Data Backup</h2>
+                    </div>
+
+                    <div class="backup-options">
+                        <div class="backup-card">
+                            <h3><i class="fas fa-download"></i> Export Data</h3>
+                            <p>Export all channels to a JSON file</p>
+                            <button class="btn-primary" onclick="adminPanel.exportChannels()">
+                                <i class="fas fa-file-export"></i> Export Now
+                            </button>
+                        </div>
+
+                        <div class="backup-card">
+                            <h3><i class="fas fa-upload"></i> Import Data</h3>
+                            <p>Import channels from a JSON file</p>
+                            <div class="file-upload">
+                                <input type="file" id="importFile" accept=".json">
+                                <label for="importFile" class="btn-secondary">
+                                    <i class="fas fa-file-import"></i> Choose File
+                                </label>
+                                <button class="btn-primary" onclick="adminPanel.importFromFile()">
+                                    <i class="fas fa-upload"></i> Import
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="backup-card">
+                            <h3><i class="fas fa-cloud"></i> Cloud Backup</h3>
+                            <p>Backup data to cloud storage</p>
+                            <button class="btn-secondary" onclick="adminPanel.backupToCloud()">
+                                <i class="fas fa-cloud-upload-alt"></i> Backup Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="backup-history">
+                        <h3><i class="fas fa-history"></i> Backup History</h3>
+                        <div class="history-list" id="backupHistory">
+                            <!-- Backup history will be loaded here -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer -->
+            <footer class="admin-footer">
+                <p>Live TV Admin Panel &copy; 2024 | Running on GitHub Pages</p>
+                <p id="storageInfo">Storage: Local Storage</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+            <p>Are you sure you want to delete this channel? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="adminPanel.closeModal()">Cancel</button>
+                <button class="btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <h3 id="messageTitle"></h3>
+            <p id="messageText"></p>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="adminPanel.closeMessage()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
